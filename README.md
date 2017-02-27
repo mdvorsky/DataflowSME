@@ -25,9 +25,12 @@ included `Injector` program). All exercises write their output to BigQuery.
     [linux](http://maven.apache.org/install.html))
 1.  Google [Cloud SDK](https://cloud.google.com/sdk/)
 1.  To test your installation, open a terminal window and type:
-    *   java -version
-    *   mvn --version
-    *   gcloud --version
+
+    ```shell
+    $ java -version
+    $ mvn --version
+    $ gcloud --version
+    ```
 
 ### Google Cloud
 
@@ -38,8 +41,13 @@ included `Injector` program). All exercises write their output to BigQuery.
 1.  Create a BigQuery dataset in your project.
 
 ### Download the code
-1.  Run `git clone https://github.com/mdvorsky/DataflowSME.git`
-1.  Run `cd DataflowSME`
+
+1.  Clone the github repository
+
+    ```shell
+    $ git clone https://github.com/mdvorsky/DataflowSME.git
+    $ cd DataflowSME
+    ```
 
 ## Exercise 0 (prework)
 
@@ -49,21 +57,33 @@ BigQuery.
 How many parse errors did you encounter? How many unique teams are present in
 the dataset?
 
-1.  Run `mvn compile exec:java
-    -Dexec.mainClass=com.google.cloud.dataflow.tutorials.game.Exercise0
-    -Dexec.args="--project=YOUR-PROJECT
-    --stagingLocation=gs://YOUR-STAGING-BUCKET
-    --runner=BlockingDataflowPipelineRunner --outputDataset=YOUR-DATASET
-    --outputTableName=events
-    --input=gs://dataflow-samples/game/gaming_data1.csv"`
+1.  Run the pipeline (should take about 15 minutes).
+
+    ```shell
+    $ mvn compile exec:java \
+         -Dexec.mainClass=com.google.cloud.dataflow.tutorials.game.Exercise0 \
+         -Dexec.args="--project=YOUR-PROJECT \
+                      --stagingLocation=gs://YOUR-STAGING-BUCKET \
+                      --runner=BlockingDataflowPipelineRunner \
+                      --outputDataset=YOUR-DATASET \
+                      --outputTableName=events \
+                      --input=gs://dataflow-samples/game/gaming_data1.csv"
+    ```
+
 1.  Navigate to the Dataflow UI (the link is printed in the terminal, look for
     `"To access the Dataflow monitoring console, please navigate to ..."`).
+
 1.  Once the pipeline finishes, check the value of `ParseGameEvent/ParseErrors`
     aggregator on the UI (look for `Custom counters` section in the `Summary`
-    tab).
-1.  Check the number of distinct teams in the created BigQuery table. `bq query
-    --project_id=YOUR-PROJECT 'select count(distinct team) from
-    YOUR-DATASET.events;'`
+    tab). This is the *first answer* to the exercise.
+
+1.  Check the number of distinct teams in the created BigQuery table.
+
+    ```shell
+    $ bq query --project_id=YOUR-PROJECT \
+        'select count(distinct team) from YOUR-DATASET.events;'
+    ```
+    This is the *second answer* to the exercise.
 
 ## Exercise 1
 
@@ -72,18 +92,28 @@ Use Dataflow to calculate per-user scores and write them to BigQuery.
 What is the total score of the user 'user1_AmethystKoala'?
 
 1.  Modify
-    src/main/java8/com/google/cloud/dataflow/tutorials/game/Exercise1.java
-1.  Run `mvn compile exec:java
-    -Dexec.mainClass=com.google.cloud.dataflow.tutorials.game.Exercise1
-    -Dexec.args="--project=YOUR-PROJECT
-    --stagingLocation=gs://YOUR-STAGING-BUCKET
-    --runner=BlockingDataflowPipelineRunner --outputDataset=YOUR-DATASET
-    --outputTableName=user_scores
-    --input=gs://dataflow-samples/game/gaming_data1.csv"`
+    `src/main/java8/com/google/cloud/dataflow/tutorials/game/Exercise1.java`
+1.  Run the pipeline
+
+    ```shell
+    $ mvn compile exec:java \
+         -Dexec.mainClass=com.google.cloud.dataflow.tutorials.game.Exercise1 \
+         -Dexec.args="--project=YOUR-PROJECT \
+                      --stagingLocation=gs://YOUR-STAGING-BUCKET \
+                      --runner=BlockingDataflowPipelineRunner \
+                      --outputDataset=YOUR-DATASET \
+                      --outputTableName=user_scores \
+                      --input=gs://dataflow-samples/game/gaming_data1.csv"
+    ```
+
 1.  Once the pipeline finishes successfully check the score for
-    'user1_AmethystKoala': `bq query --project_id=YOUR-PROJECT 'select
-    total_score from YOUR-DATASET.user_scores where user =
-    'user1_AmethystKoala';'`
+    'user1_AmethystKoala':
+
+    ```shell
+    $ bq query --project_id=YOUR-PROJECT \
+        'select total_score from YOUR-DATASET.user_scores \
+         where user = "user1_AmethystKoala";'
+    ```
 
 ## Exercise 2
 
