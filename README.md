@@ -16,14 +16,11 @@ included `Injector` program). All exercises write their output to BigQuery.
 
 ### Tools
 
-1.  Install Java 8
-1.  Install an IDE such as Eclipse or IntelliJ (optional)
-1.  Install Maven
-    *   windows
-        https://maven.apache.org/guides/getting-started/windows-prerequisites.html
-    *   mac: http://tostring.me/151/installing-maven-on-os-x/
-    *   linux: http://maven.apache.org/install.html
-1.  Google Cloud SDK: https://cloud.google.com/sdk/
+1.  Install [Java 8](https://java.com/fr/download/)
+1.  Install an IDE such as [Eclipse](https://eclipse.org/downloads/) or [IntelliJ](https://www.jetbrains.com/idea/download/) (optional)
+1.  Install Maven (for [windows](https://maven.apache.org/guides/getting-started/windows-prerequisites.html), 
+    [mac](http://tostring.me/151/installing-maven-on-os-x/), [linux](http://maven.apache.org/install.html))
+1.  Google [Cloud SDK](https://cloud.google.com/sdk/)
 1.  To test your installation, open a terminal window and type:
     *   java -version
     *   mvn --version
@@ -31,8 +28,9 @@ included `Injector` program). All exercises write their output to BigQuery.
 
 ### Google Cloud
 
-1.  Create a project.
-1.  Enable Dataflow and BigQuery API.
+1.  Go to https://cloud.google.com/console.
+1.  Enable billing and create a project.
+1.  Enable Google Dataflow API and BigQuery API.
 1.  Create a GCS bucket in your project as a staging location.
 1.  Create a BigQuery dataset in your project.
 
