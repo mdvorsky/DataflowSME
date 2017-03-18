@@ -27,6 +27,7 @@ import com.google.cloud.dataflow.sdk.transforms.PTransform;
 import com.google.cloud.dataflow.sdk.transforms.ParDo;
 import com.google.cloud.dataflow.sdk.values.PBegin;
 import com.google.cloud.dataflow.sdk.values.PCollection;
+import com.google.cloud.dataflow.tutorials.game.solutions.Exercise2;
 import com.google.cloud.dataflow.tutorials.game.utils.ChangeMe;
 import com.google.cloud.dataflow.tutorials.game.utils.GameEvent;
 import com.google.cloud.dataflow.tutorials.game.utils.Options;

@@ -330,10 +330,9 @@ play' events and 'game score' events.
 1.  Run the injector with additional output for play events.
 
     ```shell
-    $ export PLAY_TOPIC=play_events_$USER
     $ mvn exec:java \
       -Dexec.mainClass="com.google.cloud.dataflow.tutorials.game.injector.Injector" \
-      -Dexec.args="$PROJECT $TOPIC $PLAY_TOPIC none"
+      -Dexec.args="YOUR-PROJECT game_events_$USER play_events_$USER none"
     ```
 
 1.  Run the pipeline

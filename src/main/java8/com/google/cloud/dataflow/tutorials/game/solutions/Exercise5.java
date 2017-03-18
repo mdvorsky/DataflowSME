@@ -51,12 +51,8 @@ import com.google.cloud.dataflow.tutorials.game.utils.Options;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
-import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
 import org.joda.time.Instant;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,10 +66,6 @@ import org.slf4j.LoggerFactory;
 public class Exercise5 {
 
   private static final Logger LOG = LoggerFactory.getLogger(Exercise5.class);
-
-  private static DateTimeFormatter fmt =
-      DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS")
-          .withZone(DateTimeZone.forTimeZone(TimeZone.getTimeZone("PST")));
 
   /**
    * Filter out all but those users with a high clickrate, which we will consider as 'spammy' users.
@@ -239,8 +231,8 @@ public class Exercise5 {
           new TableRow()
               .set("team", c.element().getKey())
               .set("total_score", c.element().getValue())
-              .set("window_start", fmt.print(((IntervalWindow) c.window()).start()))
-              .set("processing_time", fmt.print(Instant.now()));
+              .set("window_start", ((IntervalWindow) c.window()).start().getMillis() / 1000)
+              .set("processing_time", Instant.now().getMillis() / 1000);
       c.output(row);
     }
 
@@ -248,8 +240,8 @@ public class Exercise5 {
       List<TableFieldSchema> fields = new ArrayList<>();
       fields.add(new TableFieldSchema().setName("team").setType("STRING"));
       fields.add(new TableFieldSchema().setName("total_score").setType("INTEGER"));
-      fields.add(new TableFieldSchema().setName("window_start").setType("STRING"));
-      fields.add(new TableFieldSchema().setName("processing_time").setType("STRING"));
+      fields.add(new TableFieldSchema().setName("window_start").setType("TIMESTAMP"));
+      fields.add(new TableFieldSchema().setName("processing_time").setType("TIMESTAMP"));
       return new TableSchema().setFields(fields);
     }
   }

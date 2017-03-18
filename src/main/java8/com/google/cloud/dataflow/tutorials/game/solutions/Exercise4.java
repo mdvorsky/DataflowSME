@@ -48,12 +48,8 @@ import com.google.cloud.dataflow.tutorials.game.utils.Options;
 import com.google.common.annotations.VisibleForTesting;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
-import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
 import org.joda.time.Instant;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 /**
  * Fourth in a series of coding exercises in a gaming domain.
@@ -65,9 +61,6 @@ import org.joda.time.format.DateTimeFormatter;
  */
 public class Exercise4 {
 
-  private static DateTimeFormatter fmt =
-      DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS")
-          .withZone(DateTimeZone.forTimeZone(TimeZone.getTimeZone("PST")));
   static final Duration TEN_SECONDS = Duration.standardSeconds(10);
   static final Duration THIRTY_SECONDS = Duration.standardSeconds(30);
 
@@ -213,8 +206,8 @@ public class Exercise4 {
           new TableRow()
               .set("team", c.element().getKey())
               .set("total_score", c.element().getValue())
-              .set("window_start", fmt.print(((IntervalWindow) c.window()).start()))
-              .set("processing_time", fmt.print(Instant.now()))
+              .set("window_start", ((IntervalWindow) c.window()).start().getMillis() / 1000)
+              .set("processing_time", Instant.now().getMillis() / 1000)
               .set("timing", c.pane().getTiming().toString());
       c.output(row);
     }
@@ -223,8 +216,8 @@ public class Exercise4 {
       List<TableFieldSchema> fields = new ArrayList<>();
       fields.add(new TableFieldSchema().setName("team").setType("STRING"));
       fields.add(new TableFieldSchema().setName("total_score").setType("INTEGER"));
-      fields.add(new TableFieldSchema().setName("window_start").setType("STRING"));
-      fields.add(new TableFieldSchema().setName("processing_time").setType("STRING"));
+      fields.add(new TableFieldSchema().setName("window_start").setType("TIMESTAMP"));
+      fields.add(new TableFieldSchema().setName("processing_time").setType("TIMESTAMP"));
       fields.add(new TableFieldSchema().setName("timing").setType("STRING"));
       return new TableSchema().setFields(fields);
     }
@@ -238,7 +231,7 @@ public class Exercise4 {
           new TableRow()
               .set("user", c.element().getKey())
               .set("total_score", c.element().getValue())
-              .set("processing_time", fmt.print(Instant.now()));
+              .set("processing_time", Instant.now().getMillis() / 1000);
       c.output(row);
     }
 
@@ -246,7 +239,7 @@ public class Exercise4 {
       List<TableFieldSchema> fields = new ArrayList<>();
       fields.add(new TableFieldSchema().setName("user").setType("STRING"));
       fields.add(new TableFieldSchema().setName("total_score").setType("INTEGER"));
-      fields.add(new TableFieldSchema().setName("processing_time").setType("STRING"));
+      fields.add(new TableFieldSchema().setName("processing_time").setType("TIMESTAMP"));
       return new TableSchema().setFields(fields);
     }
   }

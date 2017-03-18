@@ -85,7 +85,7 @@ public class Exercise2 {
   }
 
   /** Format a KV of team and their score to a BigQuery TableRow. */
-  static class FormatTeamScoreSumsFn extends DoFn<KV<String, Integer>, TableRow>
+  public static class FormatTeamScoreSumsFn extends DoFn<KV<String, Integer>, TableRow>
       implements RequiresWindowAccess {
     @Override
     public void processElement(ProcessContext c) {
@@ -98,7 +98,7 @@ public class Exercise2 {
     }
 
     /** Defines the BigQuery schema. */
-    static TableSchema getSchema() {
+    public static TableSchema getSchema() {
       List<TableFieldSchema> fields = new ArrayList<>();
       fields.add(new TableFieldSchema().setName("team").setType("STRING"));
       fields.add(new TableFieldSchema().setName("total_score").setType("INTEGER"));

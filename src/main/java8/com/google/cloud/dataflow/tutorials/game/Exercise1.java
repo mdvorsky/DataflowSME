@@ -58,7 +58,7 @@ public class Exercise1 {
 
     private final String field;
 
-    ExtractAndSumScore(String field) {
+    public ExtractAndSumScore(String field) {
       this.field = field;
     }
 

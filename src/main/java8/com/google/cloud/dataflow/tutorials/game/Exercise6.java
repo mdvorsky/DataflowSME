@@ -39,15 +39,12 @@ import com.google.cloud.dataflow.sdk.transforms.windowing.IntervalWindow;
 import com.google.cloud.dataflow.sdk.values.KV;
 import com.google.cloud.dataflow.sdk.values.PCollection;
 import com.google.cloud.dataflow.sdk.values.TypeDescriptor;
+import com.google.cloud.dataflow.tutorials.game.solutions.Exercise3;
 import com.google.cloud.dataflow.tutorials.game.utils.GameEvent;
 import com.google.cloud.dataflow.tutorials.game.utils.Options;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
-import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,10 +58,6 @@ import org.slf4j.LoggerFactory;
 public class Exercise6 {
 
   private static final Logger LOG = LoggerFactory.getLogger(Exercise6.class);
-
-  private static DateTimeFormatter fmt =
-      DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS")
-          .withZone(DateTimeZone.forTimeZone(TimeZone.getTimeZone("PST")));
 
   /** Calculate and output an element's session duration. */
   private static class UserSessionInfoFn extends DoFn<KV<String, Integer>, Integer>
@@ -161,14 +154,14 @@ public class Exercise6 {
     public void processElement(ProcessContext c) {
       TableRow row =
           new TableRow()
-              .set("window_start", fmt.print(((IntervalWindow) c.window()).start()))
+              .set("window_start", ((IntervalWindow) c.window()).start().getMillis() / 1000)
               .set("mean_duration", c.element());
       c.output(row);
     }
 
     static TableSchema getSchema() {
       List<TableFieldSchema> fields = new ArrayList<>();
-      fields.add(new TableFieldSchema().setName("window_start").setType("STRING"));
+      fields.add(new TableFieldSchema().setName("window_start").setType("TIMESTAMP"));
       fields.add(new TableFieldSchema().setName("mean_duration").setType("FLOAT"));
       return new TableSchema().setFields(fields);
     }

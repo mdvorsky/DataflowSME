@@ -50,12 +50,8 @@ import com.google.cloud.dataflow.tutorials.game.utils.Options;
 import com.google.cloud.dataflow.tutorials.game.utils.PlayEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
-import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
 import org.joda.time.Instant;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,10 +73,6 @@ public class Exercise7 {
 
   private static final TupleTag<PlayEvent> playTag = new TupleTag<PlayEvent>();
   private static final TupleTag<GameEvent> eventTag = new TupleTag<GameEvent>();
-
-  private static DateTimeFormatter fmt =
-      DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS")
-          .withZone(DateTimeZone.forTimeZone(TimeZone.getTimeZone("PST")));
 
   /** Options supported by {@link GameStats}. */
   interface Exercise7Options extends Options, StreamingOptions {
@@ -221,14 +213,14 @@ public class Exercise7 {
       TableRow row =
           new TableRow()
               .set("bad_user", c.element().getKey())
-              .set("time", fmt.print(Instant.now()));
+              .set("time", Instant.now().getMillis() / 1000);
       c.output(row);
     }
 
     static TableSchema getSchema() {
       List<TableFieldSchema> fields = new ArrayList<>();
       fields.add(new TableFieldSchema().setName("bad_user").setType("STRING"));
-      fields.add(new TableFieldSchema().setName("time").setType("STRING"));
+      fields.add(new TableFieldSchema().setName("time").setType("TIMESTAMP"));
       return new TableSchema().setFields(fields);
     }
   }
