@@ -29,6 +29,11 @@ public interface Options extends PipelineOptions {
   String getInput();
   void setInput(String value);
 
+  @Description("Pub/Sub topic to read from. Used if --input is empty.")
+  String getTopic();
+
+  void setTopic(String value);
+
   @Description("BigQuery Dataset to write tables to. Must already exist.")
   @Validation.Required
   String getOutputDataset();

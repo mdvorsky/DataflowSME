@@ -33,7 +33,9 @@ import com.google.cloud.dataflow.sdk.transforms.ParDo;
 import com.google.cloud.dataflow.sdk.values.KV;
 import com.google.cloud.dataflow.sdk.values.PCollection;
 import com.google.cloud.dataflow.tutorials.game.utils.ChangeMe;
+import com.google.cloud.dataflow.tutorials.game.utils.GameEvent;
 import com.google.cloud.dataflow.tutorials.game.utils.Options;
+import com.google.cloud.dataflow.tutorials.game.utils.ParseEventFn;
 import java.util.ArrayList;
 import java.util.List;
 

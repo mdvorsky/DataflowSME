@@ -18,15 +18,14 @@ package com.google.cloud.dataflow.tutorials.game.utils;
 
 import com.google.cloud.dataflow.sdk.transforms.PTransform;
 import com.google.cloud.dataflow.sdk.values.PCollection;
+import com.google.cloud.dataflow.sdk.values.PInput;
 
-/**
- * PTransform that crashes at runtime used as a placeholder in tutorials.
- */
-public class ChangeMe<InputT, OutputT>
-    extends PTransform<PCollection<InputT>, PCollection<OutputT>> {
+/** PTransform that crashes at runtime used as a placeholder in tutorials. */
+public class ChangeMe<InputT extends PInput, OutputT>
+    extends PTransform<InputT, PCollection<OutputT>> {
 
   @Override
-  public PCollection<OutputT> apply(PCollection<InputT> input) {
+  public PCollection<OutputT> apply(InputT input) {
     throw new RuntimeException("Not implemented");
   }
 }

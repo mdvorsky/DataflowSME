@@ -29,7 +29,9 @@ import com.google.cloud.dataflow.sdk.options.GcpOptions;
 import com.google.cloud.dataflow.sdk.options.PipelineOptionsFactory;
 import com.google.cloud.dataflow.sdk.transforms.DoFn;
 import com.google.cloud.dataflow.sdk.transforms.ParDo;
+import com.google.cloud.dataflow.tutorials.game.utils.GameEvent;
 import com.google.cloud.dataflow.tutorials.game.utils.Options;
+import com.google.cloud.dataflow.tutorials.game.utils.ParseEventFn;
 import java.util.ArrayList;
 import java.util.List;
 

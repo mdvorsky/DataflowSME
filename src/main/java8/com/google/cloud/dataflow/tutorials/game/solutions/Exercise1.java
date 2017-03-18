@@ -35,9 +35,9 @@ import com.google.cloud.dataflow.sdk.transforms.Sum;
 import com.google.cloud.dataflow.sdk.values.KV;
 import com.google.cloud.dataflow.sdk.values.PCollection;
 import com.google.cloud.dataflow.sdk.values.TypeDescriptor;
-import com.google.cloud.dataflow.tutorials.game.GameEvent;
-import com.google.cloud.dataflow.tutorials.game.ParseEventFn;
+import com.google.cloud.dataflow.tutorials.game.utils.GameEvent;
 import com.google.cloud.dataflow.tutorials.game.utils.Options;
+import com.google.cloud.dataflow.tutorials.game.utils.ParseEventFn;
 import java.util.ArrayList;
 import java.util.List;
 
