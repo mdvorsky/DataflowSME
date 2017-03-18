@@ -45,7 +45,7 @@ public class ParseEventFn extends DoFn<String, GameEvent> {
       String team = components[1].trim();
       Integer score = Integer.parseInt(components[2].trim());
       Long timestamp = Long.parseLong(components[3].trim());
-      String eventId = components[5].trim();
+      String eventId = components.length >= 6 ? components[5].trim() : "none";
       GameEvent gInfo = new GameEvent(user, team, score, timestamp, eventId);
       c.output(gInfo);
     } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
