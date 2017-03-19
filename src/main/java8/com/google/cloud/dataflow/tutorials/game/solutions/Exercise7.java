@@ -43,6 +43,7 @@ import com.google.cloud.dataflow.sdk.transforms.WithKeys;
 import com.google.cloud.dataflow.sdk.transforms.join.CoGbkResult;
 import com.google.cloud.dataflow.sdk.transforms.join.CoGroupByKey;
 import com.google.cloud.dataflow.sdk.transforms.join.KeyedPCollectionTuple;
+import com.google.cloud.dataflow.sdk.transforms.windowing.AfterPane;
 import com.google.cloud.dataflow.sdk.transforms.windowing.AfterProcessingTime;
 import com.google.cloud.dataflow.sdk.transforms.windowing.GlobalWindows;
 import com.google.cloud.dataflow.sdk.transforms.windowing.OutputTimeFns;
@@ -77,9 +78,9 @@ import org.slf4j.LoggerFactory;
 public class Exercise7 {
   private static final String TIMESTAMP_ATTRIBUTE = "timestamp_ms";
   private static final String MESSAGE_ID_ATTRIBUTE = "unique_id";
-  private static final int GLOBAL_LATENCY_QUANTILES = 21;
+  private static final int SESSION_GAP_MINUTES = 1;
+  private static final int GLOBAL_LATENCY_QUANTILES = 31;
   private static final int GLOBAL_AGGREGATE_FANOUT = 16;
-  private static final int GLOBAL_AGGREGATE_TRIGGER_SEC = 30;
   private static final Logger LOG = LoggerFactory.getLogger(Exercise7.class);
 
   private static final TupleTag<PlayEvent> playTag = new TupleTag<PlayEvent>();
@@ -98,12 +99,6 @@ public class Exercise7 {
     String getPlayEventsTopic();
 
     void setPlayEventsTopic(String value);
-
-    @Description("Numeric value of gap between user sessions, in minutes")
-    @Default.Integer(5)
-    Integer getSessionGap();
-
-    void setSessionGap(Integer value);
   }
 
   public static class ComputeLatencyFn extends DoFn<KV<String, CoGbkResult>, KV<String, Long>> {
@@ -174,7 +169,7 @@ public class Exercise7 {
             .apply(
                 "SessionizeGameScoreEvents",
                 Window.<KV<String, GameEvent>>into(
-                        Sessions.withGapDuration(Duration.standardMinutes(options.getSessionGap())))
+                        Sessions.withGapDuration(Duration.standardMinutes(SESSION_GAP_MINUTES)))
                     .withOutputTimeFn(OutputTimeFns.outputAtEndOfWindow()));
 
     // Read PlayEvents from Pub/Sub using custom timestamps and custom message id label.
@@ -193,7 +188,7 @@ public class Exercise7 {
             .apply(
                 "SessionizeGamePlayEvents",
                 Window.<KV<String, PlayEvent>>into(
-                        Sessions.withGapDuration(Duration.standardMinutes(options.getSessionGap())))
+                        Sessions.withGapDuration(Duration.standardMinutes(SESSION_GAP_MINUTES)))
                     .withOutputTimeFn(OutputTimeFns.outputAtEndOfWindow()));
 
     // Compute per-user latency.
@@ -212,11 +207,7 @@ public class Exercise7 {
             .apply(
                 "GlobalWindowRetrigger",
                 Window.<Long>into(new GlobalWindows())
-                    .triggering(
-                        Repeatedly.forever(
-                            AfterProcessingTime.pastFirstElementInPane()
-                                .plusDelayOf(
-                                    Duration.standardSeconds(GLOBAL_AGGREGATE_TRIGGER_SEC))))
+                    .triggering(Repeatedly.forever(AfterPane.elementCountAtLeast(100)))
                     .accumulatingFiredPanes())
             .apply(
                 ((Combine.Globally<Long, List<Long>>)

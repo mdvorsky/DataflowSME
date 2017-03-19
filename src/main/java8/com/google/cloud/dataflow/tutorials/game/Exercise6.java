@@ -40,6 +40,7 @@ import com.google.cloud.dataflow.sdk.values.KV;
 import com.google.cloud.dataflow.sdk.values.PCollection;
 import com.google.cloud.dataflow.sdk.values.TypeDescriptor;
 import com.google.cloud.dataflow.tutorials.game.solutions.Exercise3;
+import com.google.cloud.dataflow.tutorials.game.utils.ChangeMe;
 import com.google.cloud.dataflow.tutorials.game.utils.GameEvent;
 import com.google.cloud.dataflow.tutorials.game.utils.Options;
 import java.util.ArrayList;
@@ -117,20 +118,25 @@ public class Exercise6 {
     // This information could help the game designers track the changing user engagement
     // as their set of games changes.
     userEvents
-        // Window the user events into sessions. Make sure to use an outputTimeFn that sets the
-        // output timestamp to the end of the window. This will allow us to compute means on
-        // sessions based on their end times, rather than their start times.
-        /* TODO: YOUR CODE GOES HERE */
+        // Window the user events into sessions with gap options.getSessionGap() minutes. Make sure
+        // to use an outputTimeFn that sets the output timestamp to the end of the window. This will
+        // allow us to compute means on sessions based on their end times, rather than their start
+        // times.
+        .apply(
+            /* TODO: YOUR CODE GOES HERE */
+            new ChangeMe<PCollection<KV<String, Integer>>, KV<String, Integer>>())
         // For this use, we care only about the existence of the session, not any particular
         // information aggregated over it, so the following is an efficient way to do that.
         .apply(Combine.perKey(x -> 0))
         // Get the duration per session.
         .apply("UserSessionActivity", ParDo.of(new UserSessionInfoFn()))
         // Re-window to process groups of session sums according to when the sessions complete.
-        // In streaming we can't just ask "what is the mean value" we must ask "what is the mean
-        // value for some window of time", so we comute means for sessions that end during a given
-        // window.
-        /* TODO: YOUR CODE GOES HERE */
+        // In streaming we don't just ask "what is the mean value" we must ask "what is the mean
+        // value for some window of time". To compute periodic means of session durations, we
+        // re-window the session durations.
+        .apply(
+            /* TODO: YOUR CODE GOES HERE */
+            new ChangeMe<PCollection<Integer>, Integer>())
         // Find the mean session duration in each window.
         .apply(Mean.<Integer>globally().withoutDefaults())
         // Write this info to a BigQuery table.

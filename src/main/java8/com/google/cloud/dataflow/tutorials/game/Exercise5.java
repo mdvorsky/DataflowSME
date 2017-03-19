@@ -34,6 +34,7 @@ import com.google.cloud.dataflow.sdk.transforms.DoFn.RequiresWindowAccess;
 import com.google.cloud.dataflow.sdk.transforms.MapElements;
 import com.google.cloud.dataflow.sdk.transforms.PTransform;
 import com.google.cloud.dataflow.sdk.transforms.ParDo;
+import com.google.cloud.dataflow.sdk.transforms.Sum;
 import com.google.cloud.dataflow.sdk.transforms.View;
 import com.google.cloud.dataflow.sdk.transforms.windowing.FixedWindows;
 import com.google.cloud.dataflow.sdk.transforms.windowing.IntervalWindow;
@@ -80,17 +81,18 @@ public class Exercise5 {
     public PCollection<KV<String, Integer>> apply(PCollection<KV<String, Integer>> userScores) {
       // [START EXERCISE 5 PART a]:
       // Get the sum of scores for each user.
-      //   Use a built-in transform for summing up values.
       PCollection<KV<String, Integer>> sumScores =
-          userScores.apply(new ChangeMe<>() /* TODO: YOUR CODE GOES HERE */);
+          userScores.apply("UserSum", Sum.<String>integersPerKey());
 
       // Extract the score from each element, and use it to find the global mean.
-      //  Use built-in transforms to turn the sums into doubles and then mean them globally.
+      //  Use built-in transforms Values and Mean.
       final PCollectionView<Double> globalMeanScore = null; /* TODO: YOUR CODE GOES HERE */
 
       // Filter the user sums using the global mean.
-      //   Use the globalMeanScore as a side input
-      //   Write a cusotom DoFn to filter out users with scores that are > (mean * SCORE_WEIGHT)
+      // Developer Docs: https://cloud.google.com/dataflow/model/par-do#side-inputs
+      //
+      //   Use ParDo with globalMeanScore as a side input and a custom DoFn to keep only users
+      //   with scores that are > (mean * SCORE_WEIGHT)
       PCollection<KV<String, Integer>> filtered =
           sumScores.apply(new ChangeMe<>() /* TODO: YOUR CODE GOES HERE */);
       // [END EXERCISE 5 PART a]:
@@ -166,9 +168,14 @@ public class Exercise5 {
     // suspected robots-- to filter out scores from those users from the sum.
     // Write the results to BigQuery.
     rawEvents
+        .apply(
+            Window.named("WindowIntoFixedWindows")
+                .<GameEvent>into(
+                    FixedWindows.of(Duration.standardMinutes(options.getFixedWindowDuration()))))
         // Filter out the detected spammer users, using the side input derived above.
+        //  Use ParDo with spammersView side input to filter out spammers.
+        .apply(/* TODO: YOUR CODE GOES HERE */ new ChangeMe<PCollection<GameEvent>, GameEvent>())
         // Extract and sum teamname/score pairs from the event data.
-        /* TODO: YOUR CODE GOES HERE */
         .apply("ExtractTeamScore", new Exercise1.ExtractAndSumScore("team"))
         // Write the result to BigQuery
         .apply(ParDo.named("FormatTeamWindows").of(new FormatTeamWindowFn()))

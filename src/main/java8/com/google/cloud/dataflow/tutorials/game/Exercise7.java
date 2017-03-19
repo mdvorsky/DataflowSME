@@ -66,9 +66,9 @@ import org.slf4j.LoggerFactory;
 public class Exercise7 {
   private static final String TIMESTAMP_ATTRIBUTE = "timestamp_ms";
   private static final String MESSAGE_ID_ATTRIBUTE = "unique_id";
-  private static final int GLOBAL_LATENCY_QUANTILES = 21;
+  private static final int SESSION_GAP_MINUTES = 1;
+  private static final int GLOBAL_LATENCY_QUANTILES = 31;
   private static final int GLOBAL_AGGREGATE_FANOUT = 16;
-  private static final int GLOBAL_AGGREGATE_TRIGGER_SEC = 30;
   private static final Logger LOG = LoggerFactory.getLogger(Exercise7.class);
 
   private static final TupleTag<PlayEvent> playTag = new TupleTag<PlayEvent>();
@@ -87,12 +87,6 @@ public class Exercise7 {
     String getPlayEventsTopic();
 
     void setPlayEventsTopic(String value);
-
-    @Description("Numeric value of gap between user sessions, in minutes")
-    @Default.Integer(5)
-    Integer getSessionGap();
-
-    void setSessionGap(Integer value);
   }
 
   public static class ComputeLatencyFn extends DoFn<KV<String, CoGbkResult>, KV<String, Long>> {
