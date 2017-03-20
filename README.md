@@ -50,6 +50,15 @@ included `Injector` program). All exercises write their output to BigQuery.
     $ cd DataflowSME
     ```
 
+    Alternatively, download it from
+    [here](https://github.com/mdvorsky/DataflowSME/archive/master.zip), and then
+    unzip it:
+
+    ```shell
+    $ unzip DataflowSME-master.zip
+    $ cd DataflowSME-master
+    ```
+
 ## Exercise 0 (prework)
 
 Use the provided Dataflow pipeline to import the input events from GCS to
